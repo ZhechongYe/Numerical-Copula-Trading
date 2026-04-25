@@ -1,0 +1,330 @@
+{
+  "meta": {
+    "timeframe": "1h",
+    "regression": "BTC_t = beta^i * alt_t + residual (through origin; no intercept)",
+    "spread": "S_t^i = BTC_t - beta^i * alt_t (same as OLS residual)",
+    "adf_rule": "adf_pass_5pct: ADF p-value < 0.05 (linear stationarity / linear cointegration narrative)",
+    "kss_auxiliary": "Delta_spread_t = delta * spread_{t-1}^3 + eps (no intercept; slide form)",
+    "kss_rule": "kss_pass_10pct: KSS auxiliary t-stat < -1.92 (10% left tail; nonlinear stationarity narrative)",
+    "kendall_tau": "Kendall tau between aligned BTC and alt closes (for ranking KSS-passing pairs)",
+    "copula_selection": "Copula pool gate: kss_pass_10pct only. Among those pairs, take the two largest kendall_tau.",
+    "copula_top2": [
+      {
+        "rank": 1,
+        "alt_symbol": "XRP_USDT",
+        "kendall_tau": 0.6245537064034555,
+        "adf_pvalue": 0.06241666465267245,
+        "kss_t_stat": -2.3971243411035936,
+        "beta": 44696.380010573914
+      },
+      {
+        "rank": 2,
+        "alt_symbol": "BCH_USDT",
+        "kendall_tau": 0.5559624547463811,
+        "adf_pvalue": 0.19229611508714828,
+        "kss_t_stat": -5.953639663936683,
+        "beta": 132.5377639349161
+      }
+    ],
+    "n_pairs_passing_kss_gate": 6,
+    "optimizer_objective": "min SSR(Delta_spread - delta * lag^3 * exp(-theta * z^2)); compare Nelder-Mead vs BFGS",
+    "optimizer_runs": {
+      "ADA_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.13064730001497082,
+          "nit": 211,
+          "nfev": 384,
+          "final_ssr": 898592229.9779147,
+          "x": [
+            2.7418621265540976e-05,
+            1.1411773741211029
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.08034879999468103,
+          "nit": 0,
+          "nfev": 225,
+          "final_ssr": 905527291.7011414,
+          "x": [
+            -1.6560650472079201e-15,
+            0.05
+          ]
+        }
+      },
+      "BCH_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.37861919999704696,
+          "nit": 616,
+          "nfev": 1140,
+          "final_ssr": 1374310149.233326,
+          "x": [
+            -8.494537014546302e-30,
+            -1.6787944803742625
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.053558100014925,
+          "nit": 0,
+          "nfev": 150,
+          "final_ssr": 1375786177.7911725,
+          "x": [
+            -6.917168510897276e-14,
+            0.05
+          ]
+        }
+      },
+      "ETC_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.17280999998911284,
+          "nit": 265,
+          "nfev": 490,
+          "final_ssr": 967485194.3690026,
+          "x": [
+            3.6415590719567354e-05,
+            0.6564574523026204
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.07339989999309182,
+          "nit": 0,
+          "nfev": 201,
+          "final_ssr": 968752622.4972742,
+          "x": [
+            -3.353107052705256e-15,
+            0.05
+          ]
+        }
+      },
+      "ETH_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.507724800001597,
+          "nit": 821,
+          "nfev": 1509,
+          "final_ssr": 801653408.3161256,
+          "x": [
+            -3.8178098627017895e-34,
+            -2.3319640210770243
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.061706600012257695,
+          "nit": 0,
+          "nfev": 168,
+          "final_ssr": 801963002.149477,
+          "x": [
+            -2.88965300631426e-14,
+            0.05
+          ]
+        }
+      },
+      "LINK_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.06642350001493469,
+          "nit": 105,
+          "nfev": 190,
+          "final_ssr": 1116751751.314044,
+          "x": [
+            2.256247434318825e-09,
+            0.5139530481109845
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.05710279999766499,
+          "nit": 0,
+          "nfev": 162,
+          "final_ssr": 1122723363.0441432,
+          "x": [
+            -1.2072538839356488e-14,
+            0.05
+          ]
+        }
+      },
+      "LTC_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.05735019998974167,
+          "nit": 91,
+          "nfev": 169,
+          "final_ssr": 1093435540.146794,
+          "x": [
+            4.0189088231979154e-11,
+            0.35117854976003593
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.0679455999925267,
+          "nit": 0,
+          "nfev": 189,
+          "final_ssr": 1093757698.5467558,
+          "x": [
+            -1.0299901332665865e-14,
+            0.05
+          ]
+        }
+      },
+      "XRP_USDT": {
+        "nelder_mead": {
+          "method": "Nelder-Mead",
+          "success": true,
+          "message": "Optimization terminated successfully.",
+          "elapsed_sec": 0.05251540002063848,
+          "nit": 50,
+          "nfev": 97,
+          "final_ssr": 4133439696.20767,
+          "x": [
+            -1.6621784685943202e-12,
+            -0.0710916742822782
+          ]
+        },
+        "bfgs": {
+          "method": "BFGS",
+          "success": false,
+          "message": "Desired error not necessarily achieved due to precision loss.",
+          "elapsed_sec": 0.08873899999889545,
+          "nit": 0,
+          "nfev": 195,
+          "final_ssr": 4135004608.9330764,
+          "x": [
+            -3.281412109112135e-12,
+            0.05
+          ]
+        }
+      }
+    }
+  },
+  "pairs": [
+    {
+      "alt_symbol": "ADA_USDT",
+      "n_obs": 43824,
+      "beta": 52163.63216703978,
+      "r_squared": 0.5862070020610954,
+      "kendall_tau": 0.29121642825192334,
+      "adf_statistic": -0.8195114980550806,
+      "adf_pvalue": 0.8133234216640887,
+      "adf_used_lags": 53,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -2.2909401055856446,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "BCH_USDT",
+      "n_obs": 43824,
+      "beta": 132.5377639349161,
+      "r_squared": 0.8075779633293187,
+      "kendall_tau": 0.5559624547463811,
+      "adf_statistic": -2.2392885840095884,
+      "adf_pvalue": 0.19229611508714828,
+      "adf_used_lags": 54,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -5.953639663936683,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "ETC_USDT",
+      "n_obs": 43824,
+      "beta": 1536.5016574400645,
+      "r_squared": 0.5594350999807292,
+      "kendall_tau": 0.00313543232346533,
+      "adf_statistic": -1.8574446688663937,
+      "adf_pvalue": 0.35233748880446303,
+      "adf_used_lags": 55,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -6.797595761798696,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "ETH_USDT",
+      "n_obs": 43824,
+      "beta": 21.4756958018898,
+      "r_squared": 0.8738643215983498,
+      "kendall_tau": 0.5862048774043837,
+      "adf_statistic": -1.3343921170282118,
+      "adf_pvalue": 0.6132947430994443,
+      "adf_used_lags": 52,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -1.4946050176355368,
+      "kss_pass_10pct": false,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "LINK_USDT",
+      "n_obs": 43824,
+      "beta": 3078.9827796774384,
+      "r_squared": 0.7581744893619267,
+      "kendall_tau": 0.42771807725852073,
+      "adf_statistic": -1.5051149709061322,
+      "adf_pvalue": 0.5309795354820314,
+      "adf_used_lags": 54,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -4.04504563458122,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "LTC_USDT",
+      "n_obs": 43824,
+      "beta": 438.4527837691763,
+      "r_squared": 0.676519445592084,
+      "kendall_tau": 0.28459547865893803,
+      "adf_statistic": -1.3289408302962278,
+      "adf_pvalue": 0.615830063730932,
+      "adf_used_lags": 53,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -3.748960335382366,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    },
+    {
+      "alt_symbol": "XRP_USDT",
+      "n_obs": 43824,
+      "beta": 44696.380010573914,
+      "r_squared": 0.9005213827960987,
+      "kendall_tau": 0.6245537064034555,
+      "adf_statistic": -2.7717969903659125,
+      "adf_pvalue": 0.06241666465267245,
+      "adf_used_lags": 55,
+      "adf_pass_5pct": false,
+      "kss_t_stat": -2.3971243411035936,
+      "kss_pass_10pct": true,
+      "kss_critical_10pct": -1.92
+    }
+  ]
+}
