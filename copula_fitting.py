@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 import pandas as pd
@@ -35,10 +35,16 @@ def _aic(log_likelihood: float, n_params: int) -> float:
 
 
 def _initial_rho(u: np.ndarray, v: np.ndarray) -> float:
-    tau = kendalltau(u, v, nan_policy="omit").correlation
+    tau = _kendall_tau(u, v)
     if not np.isfinite(tau):
         return 0.0
     return float(np.clip(np.sin(0.5 * np.pi * tau), -0.8, 0.8))
+
+
+def _kendall_tau(u: np.ndarray, v: np.ndarray) -> float:
+    """Return Kendall's tau without relying on scipy result attributes."""
+    tau = cast(float, kendalltau(u, v, nan_policy="omit")[0])
+    return float(tau)
 
 
 def _gaussian_logpdf(u: np.ndarray, v: np.ndarray, rho: float) -> np.ndarray:
@@ -171,14 +177,14 @@ def _fit_one_copula(copula: str, u: np.ndarray, v: np.ndarray) -> dict[str, Any]
         params = {"rho": fit["x"][0], "df": fit["x"][1]}
         n_params = 2
     elif copula == "clayton":
-        tau = kendalltau(u, v, nan_policy="omit").correlation
+        tau = _kendall_tau(u, v)
         theta0 = 2.0 * tau / (1.0 - tau) if np.isfinite(tau) and tau > 0 else 0.5
         theta0 = float(np.clip(theta0, 0.01, 20.0))
         fit = _fit_with_starts(copula, [[theta0], [0.5], [2.0]], [(0.001, 50.0)], u, v)
         params = {"theta": fit["x"][0]}
         n_params = 1
     elif copula == "gumbel":
-        tau = kendalltau(u, v, nan_policy="omit").correlation
+        tau = _kendall_tau(u, v)
         theta0 = 1.0 / (1.0 - tau) if np.isfinite(tau) and tau > 0 else 1.1
         theta0 = float(np.clip(theta0, 1.001, 20.0))
         fit = _fit_with_starts(copula, [[theta0], [1.1], [2.0]], [(1.001, 50.0)], u, v)
@@ -199,13 +205,13 @@ def _fit_one_copula(copula: str, u: np.ndarray, v: np.ndarray) -> dict[str, Any]
         raise ValueError(f"Unsupported copula: {copula}")
 
     return {
-        "best copula": copula,
+        "copula": copula,
         "params": params,
         "n_params": n_params,
         "log_likelihood": fit["log_likelihood"],
         "aic": _aic(fit["log_likelihood"], n_params),
         "success": fit["success"],
-        #"message": fit["message"],
+        "message": fit["message"],
     }
 
 
