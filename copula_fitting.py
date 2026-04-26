@@ -199,13 +199,13 @@ def _fit_one_copula(copula: str, u: np.ndarray, v: np.ndarray) -> dict[str, Any]
         raise ValueError(f"Unsupported copula: {copula}")
 
     return {
-        "copula": copula,
+        "best copula": copula,
         "params": params,
         "n_params": n_params,
         "log_likelihood": fit["log_likelihood"],
         "aic": _aic(fit["log_likelihood"], n_params),
         "success": fit["success"],
-        "message": fit["message"],
+        #"message": fit["message"],
     }
 
 
