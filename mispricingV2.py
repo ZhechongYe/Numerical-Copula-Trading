@@ -8,7 +8,7 @@ def compute_mispricing_index(uv_df, best_copula_info, u_col="u", v_col="v", eps=
     if isinstance(best_copula_info, pd.Series):
         best_copula_info = best_copula_info.to_dict()
 
-    copula_name = best_copula_info["best copula"]
+    copula_name = best_copula_info["copula"]
     params = best_copula_info["params"]
 
     u = np.clip(uv_df[u_col].astype(float).to_numpy(), eps, 1 - eps)
